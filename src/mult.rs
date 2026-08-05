@@ -1,15 +1,33 @@
 use crate::add::adder;
 
+fn dumb_adder(a: u32, b: u32) -> u32 {
+    let mut n = a;
+    let mut m = b;
+    let mut carry;
+    let mut i = 0;
+
+    while i != 32 {
+        carry = m & n;
+        n ^= m;
+        m = carry << 1;
+        i += 1;
+    }
+
+    n
+}
+
 pub fn multiplier(a: u32, b: u32) -> u32 {
     let mut n = a;
     let mut m = b;
     let mut result = 0;
-    while m != 0 {
+    let mut i = 0;
+    while i != 32 {
         if m & 1 != 0 {
-            result = adder(result, n);
+            result = dumb_adder(result, n);
         }
         n <<= 1;
         m >>= 1;
+        i += 1;
     }
     result
 }
@@ -39,52 +57,32 @@ pub fn test_mult() {
     test1mult(42, 42);
 }
 
-
-/* pub fn multiplier1(a: u32, b: u32) -> u32 {
+pub fn good_multiplier(a: u32, b: u32) -> u32 {
     let mut n = a;
     let mut m = b;
     let mut result = 0;
-    let mut i = 0;
-    while i != 32 {
-        if m & 1 != 0 {
-            result = adder2(result, n);
-        }
-        n <<= 1;
-        m >>= 1;
-        i += 1;
-    }
-    result
-}*/
-
-/* pub fn multiplier1(a: u32, b: u32) -> u32 {
-    let mut n = a;
-    let mut m = b;
-    let mut result = 0;
-    let mut i = 0;
-    while i != 32 {
+    while m != 0 {
         if m & 1 != 0 {
             result = adder(result, n);
         }
         n <<= 1;
         m >>= 1;
-        i += 1;
     }
     result
-} */
+}
+
 /* fn test2mult(a: u32, b: u32) {
     assert!(
-        a * b == multiplier2(a, b),
+        a * b == good_multiplier(a, b),
         "Mistake doing {} * {}, expected {}, got {}",
         a,
         b,
         a * b,
-        multiplier2(a, b)
+        good_multiplier(a, b)
     );
 } */
 
-
-
-/* pub fn test1_mult() {
+/* pub fn test2_mult() {
     test2mult(0, 0);
     test2mult(0, 1);
     test2mult(1, 1);
@@ -106,7 +104,7 @@ fn time_mult() {
 
 fn time2_mult() {
     for _ in 0..100000 {
-        test_mult(2423, 23423);
+        test2_mult(2423, 23423);
     }
 }
  */
