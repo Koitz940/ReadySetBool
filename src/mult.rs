@@ -1,4 +1,4 @@
-use crate::add::adder;
+//use crate::add::adder;
 
 fn dumb_adder(a: u32, b: u32) -> u32 {
     let mut n = a;
@@ -57,7 +57,7 @@ pub fn test_mult() {
     test1mult(42, 42);
 }
 
-pub fn good_multiplier(a: u32, b: u32) -> u32 {
+/* pub fn good_multiplier(a: u32, b: u32) -> u32 {
     let mut n = a;
     let mut m = b;
     let mut result = 0;
@@ -69,7 +69,7 @@ pub fn good_multiplier(a: u32, b: u32) -> u32 {
         m >>= 1;
     }
     result
-}
+} */
 
 /* fn test2mult(a: u32, b: u32) {
     assert!(

@@ -1,4 +1,4 @@
-use std::{collections::HashMap, print, println};
+use std::collections::HashMap;
 
 fn is_valid(formula: &str) -> Result<HashMap<char, bool>, String> {
     let mut depth = 0;
@@ -51,45 +51,35 @@ fn run(formula: &mut String, map: &HashMap<char, bool>) -> Option<bool> {
     }
 }
 
-pub fn print_truth_table(formula: &str) {
+pub fn sat(formula: &str) -> bool {
     let mut table = is_valid(formula).unwrap();
-    let mut vars: Vec<char> = table.keys().map(|c| *c).collect();
-    vars.sort();
-    print!("|");
-    for c in &vars {
-        print!(" {} |", c)
-    }
-    print!(" = |\n");
-    print!("|");
-    for _ in &vars {
-        print!("---|");
-    }
-    print!("---|\n");
+    let vars: Vec<char> = table.keys().map(|c| *c).collect();
     for i in 0..(1 << vars.len()) {
-        print!("|");
         for (j, c) in vars.iter().rev().enumerate().rev() {
             let val = (i >> j) & 1;
             table.insert(*c, val == 1);
-            print!(" {} |", val);
         }
-        let num = match run(&mut formula.to_string(), &table).unwrap() {
-            true => 1,
-            false => 0,
-        };
-        println!(" {} |", num);
+        let num = run(&mut formula.to_string(), &table).unwrap();
+        if num {
+            return num;
+        }
     }
+    return false;
 }
 
-fn show1table(formula: &str) {
-    println!("Table of {}", formula);
-    print_truth_table(formula);
-    println!();
+fn test1sat(formula: &str, expected: bool) {
+    assert!(
+        sat(formula) == expected,
+        "Error in SAT tests, expected sat({}) to return {}, got {}",
+        formula,
+        expected,
+        !expected
+    );
 }
 
-pub fn show_tables() {
-    show1table("AB|");
-    show1table("AB&");
-    show1table("AA!&");
-    show1table("AA^");
-    print_truth_table("AB&C|");
+pub fn test_sat() {
+    test1sat("AB|", true);
+    test1sat("AB&", true);
+    test1sat("AA!&", false);
+    test1sat("AA^", false);
 }
